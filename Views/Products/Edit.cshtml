@@ -1,0 +1,72 @@
+﻿@model NewCoreProject.Models.Product
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="container-fluid" style="overflow:auto;">
+
+    <h1 style="text-align:center">Product</h1>
+<hr />
+<div class="row">
+    <div class="col-md-9">
+            <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Product_Id" />
+                <div class="row g-5" style="display:flex">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Product_Name" class="control-label"></label>
+                            <input asp-for="Product_Name" class="form-control" />
+                            <span asp-validation-for="Product_Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Product_Description" class="control-label"></label>
+                            <input asp-for="Product_Description" class="form-control" />
+                            <span asp-validation-for="Product_Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Product_PurchasePrice" class="control-label"></label>
+                            <input asp-for="Product_PurchasePrice" class="form-control" />
+                            <span asp-validation-for="Product_PurchasePrice" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-5" style="display:flex">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Product_SalePrice" class="control-label"></label>
+                            <input asp-for="Product_SalePrice" class="form-control" />
+                            <span asp-validation-for="Product_SalePrice" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Product_Picture" class="control-label"></label>
+                         @*    <input asp-for="Product_Picture" class="form-control" /> *@
+                            <input asp-for="Product_Picture" type="file" name="Pro_Pic" style=" width:230px" />
+                            <img src="@Url.Content(Model.Product_Picture)" alt="Product Image" style="width: 100px; height: 100px;" />
+                            <span asp-validation-for="Product_Picture" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Category_Fid" class="control-label"></label>
+                            <select asp-for="Category_Fid" class="form-control" asp-items="ViewBag.Category_Fid"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <button asp-action="Index" class="btn btn-secondary">Back</button>
+                </div>
+        </form>
+    </div>
+</div>
+
+</div>
+

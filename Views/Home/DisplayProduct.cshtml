@@ -1,0 +1,332 @@
+﻿@model NewCoreProject.Models.Shop
+
+@{
+    var totalProducts = Model.Cate.Sum(c => c.Products != null ? c.Products.Count : 0);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .btn-shine {
+        position: relative;
+        overflow: hidden;
+        z-index: 0;
+    }
+
+        .btn-shine::before {
+            content: "";  
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient( 120deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100% );
+            transform: skewX(-25deg);
+            z-index: 1;
+        }
+
+        .btn-shine:hover::before {
+            animation: shine 1.5s infinite;
+        }
+
+    @@keyframes shine {
+        0% {
+            left: -75%;
+        }
+
+        100% {
+            left: 125%;
+        }
+    }
+
+    .box-img-hover {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .mask-icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .products-single:hover .mask-icon {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .mask-icon a {
+        transition: transform 0.3s ease;
+    }
+
+        .mask-icon a:hover {
+            transform: scale(1.1);
+        }
+
+/*     .text-truncate-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+    } */
+b
+</style>
+
+<!-- Start All Title Box -->
+<div class="all-title-box">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Shop</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Shop</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End All Title Box -->
+<!-- Start Shop Page  -->
+<div class="shop-box-inner">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-3 col-lg-3 col-sm-12 col-xs-12 sidebar-shop-left">
+                <div class="product-categori">
+                    <div class="filter-sidebar-left">
+                        <div class="title-left">
+                            <h2 style="font-family:Arial, sans-serif;color:mediumblue;text-align:center">CATEGORIES</h2>
+                        </div>
+                        <div class="list-group" id="list-group-men">
+                            <!-- 🟩 "All Categories" button -->
+                            <form method="get" asp-controller="Home" asp-action="DisplayProduct" class="d-grid gap-2 mb-2">
+                                <button type="submit" class="btn btn-primary btn-shine w-100 text-start" style="font-size: 18px; background: linear-gradient(135deg, black, #6610f2);">
+                                    All Categories
+                                    <small class="text-bg-success">( @totalProducts )</small>
+                                </button>
+                            </form>
+                            @foreach (var cate in Model.Cate)
+                            {
+                                <form method="get" asp-controller="Home" asp-action="DisplayProduct" class="d-grid gap-2 mb-2">
+                                    <input type="hidden" name="id" value="@cate.Category_Id" />
+                                    <button type="submit" class="btn btn-primary btn-shine w-100 text-start" style="font-size: 18px;">
+                                        @cate.Category_Name
+                                        <small class="text-bg-primary">( @cate.Products.Count )</small>
+                                    </button>
+                                </form>
+                            }
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-9 col-sm-12 col-xs-12 shop-content-right">
+                <div class="right-product-box">
+                    <div class="product-item-filter row">
+                        <div class="col-12 col-sm-8 text-center text-sm-left">
+                            <div class="toolbar-sorter-right">
+                                <span>Sort by </span>
+                                <select id="basic" class="selectpicker show-tick form-control" data-placeholder="$ USD">
+                                    <option data-display="Select">Nothing</option>
+                                    <option value="1">Popularity</option>
+                                    <option value="2">High Price → High Price</option>
+                                    <option value="3">Low Price → High Price</option>
+                                    <option value="4">Best Selling</option>
+                                </select>
+                            </div>
+                            <p>Showing all 4 results</p>
+                        </div>
+                        <div class="col-12 col-sm-4 text-center text-sm-right">
+                            <ul class="nav nav-tabs ml-auto">
+                                <li>
+                                    <a class="nav-link active" href="#grid-view" data-toggle="tab"> <i class="fa fa-th"></i> </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="#list-view" data-toggle="tab"> <i class="fa fa-list-ul"></i> </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row product-categorie-box">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade show active" id="grid-view">
+                                <div class="row">
+                                    @foreach (var p in Model.Pro)
+                                    {
+
+                                        <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 mb-4">
+                                            <div class="products-single position-relative shadow-sm border rounded overflow-hidden bg-white">
+                                                <!-- Image and Sale Tag -->
+                                                <div class="box-img-hover position-relati ve">
+                                                    <div class=" position-absolute top-0 start-0 bg-danger text-white px-2 py-1 rounded-end text-center">
+                                                        @p.Product_Name
+                                                    </div>
+
+                                                    <img src="@Url.Content(p.Product_Picture)" alt="Image"
+                                                         class="w-100 d-block" style="object-fit: cover;height: 200px;">
+
+                                                    <!-- Overlay with hover icons and button -->
+                                                    <div class="mask-icon d-flex flex-column justify-content-center align-items-center text-center">
+                                                        <ul class="list-inline mb-2">
+                                                            <li class="list-inline-item me-2">
+                                                                <a href="#" data-bs-toggle="tooltip" title="View">
+                                                                    <i class="fas fa-eye text-white fs-5"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li class="list-inline-item me-2">
+                                                                <a href="#" data-bs-toggle="tooltip" title="Compare">
+                                                                    <i class="fas fa-sync-alt text-white fs-5"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li class="list-inline-item">
+                                                                <a href="#" data-bs-toggle="tooltip" title="Add to Wishlist">
+                                                                    <i class="far fa-heart text-white fs-5"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                        <a class="btn btn-outline-light btn-sm mt-2" href="@Url.Action("AddToCart", "Home", new { id = p.Product_Id })">
+                                                            <i class="fas fa-cart-plus me-1"></i> Add to Cart
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Product Description -->
+                                                <div class="why-text text-center p-3 bg-light">
+                                                    <h6 class="mb-2 text-truncate-description">@p.Product_Description</h6>
+                                                    <h5 class="text-primary mb-0">Rs. @p.Product_SalePrice</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    }
+                                </div>
+                            </div>
+                           @*  <div role="tabpanel" class="tab-pane fade" id="list-view">
+                                <div class="list-view-box">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="products-single fix">
+                                                <div class="box-img-hover">
+                                                    <div class="type-lb">
+                                                        <p class="new">New</p>
+                                                    </div>
+                                                    <img src="images/img-pro-01.jpg" class="img-fluid" alt="Image">
+                                                    <div class="mask-icon">
+                                                        <ul>
+                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
+                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
+                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                                                        </ul>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
+                                            <div class="why-text full-width">
+                                                <h4>Lorem ipsum dolor sit amet</h4>
+                                                <h5> <del>$ 60.00</del> $40.79</h5>
+                                                <p>
+                                                    Integer tincidunt aliquet nibh vitae dictum. In turpis sapien, imperdiet quis magna nec, iaculis ultrices ante. Integer vitae suscipit nisi. Morbi dignissim risus sit amet orci porta, eget aliquam purus
+                                                    sollicitudin. Cras eu metus felis. Sed arcu arcu, sagittis in blandit eu, imperdiet sit amet eros. Donec accumsan nisi purus, quis euismod ex volutpat in. Vestibulum eleifend eros ac lobortis aliquet.
+                                                    Suspendisse at ipsum vel lacus vehicula blandit et sollicitudin quam. Praesent vulputate semper libero pulvinar consequat. Etiam ut placerat lectus.
+                                                </p>
+                                                <a class="btn hvr-hover" href="#">Add to Cart</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-view-box">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="products-single fix">
+                                                <div class="box-img-hover">
+                                                    <div class="type-lb">
+                                                        <p class="sale">Sale</p>
+                                                    </div>
+                                                    <img src="images/img-pro-02.jpg" class="img-fluid" alt="Image">
+                                                    <div class="mask-icon">
+                                                        <ul>
+                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
+                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
+                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                                                        </ul>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
+                                            <div class="why-text full-width">
+                                                <h4>Lorem ipsum dolor sit amet</h4>
+                                                <h5> <del>$ 60.00</del> $40.79</h5>
+                                                <p>
+                                                    Integer tincidunt aliquet nibh vitae dictum. In turpis sapien, imperdiet quis magna nec, iaculis ultrices ante. Integer vitae suscipit nisi. Morbi dignissim risus sit amet orci porta, eget aliquam purus
+                                                    sollicitudin. Cras eu metus felis. Sed arcu arcu, sagittis in blandit eu, imperdiet sit amet eros. Donec accumsan nisi purus, quis euismod ex volutpat in. Vestibulum eleifend eros ac lobortis aliquet.
+                                                    Suspendisse at ipsum vel lacus vehicula blandit et sollicitudin quam. Praesent vulputate semper libero pulvinar consequat. Etiam ut placerat lectus.
+                                                </p>
+                                                <a class="btn hvr-hover" href="#">Add to Cart</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-view-box">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="products-single fix">
+                                                <div class="box-img-hover">
+                                                    <div class="type-lb">
+                                                        <p class="sale">Sale</p>
+                                                    </div>
+                                                    <img src="images/img-pro-03.jpg" class="img-fluid" alt="Image">
+                                                    <div class="mask-icon">
+                                                        <ul>
+                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
+                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
+                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                                                        </ul>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
+                                            <div class="why-text full-width">
+                                                <h4>Lorem ipsum dolor sit amet</h4>
+                                                <h5> <del>$ 60.00</del> $40.79</h5>
+                                                <p>
+                                                    Integer tincidunt aliquet nibh vitae dictum. In turpis sapien, imperdiet quis magna nec, iaculis ultrices ante. Integer vitae suscipit nisi. Morbi dignissim risus sit amet orci porta, eget aliquam purus
+                                                    sollicitudin. Cras eu metus felis. Sed arcu arcu, sagittis in blandit eu, imperdiet sit amet eros. Donec accumsan nisi purus, quis euismod ex volutpat in. Vestibulum eleifend eros ac lobortis aliquet.
+                                                    Suspendisse at ipsum vel lacus vehicula blandit et sollicitudin quam. Praesent vulputate semper libero pulvinar consequat. Etiam ut placerat lectus.
+                                                </p>
+                                                <a class="btn hvr-hover" href="#">Add to Cart</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> *@
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Shop Page -->
+@section Scripts {
+    <script src="~/Scripts/Jquery.js"></script>
+}

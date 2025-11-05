@@ -1,0 +1,212 @@
+﻿@using NewCoreProject.Models
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using NewCoreProject.Helpers
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+
+@{
+    var cart = HttpContextAccessor.HttpContext?.Session.GetObjectFromJson<List<Product>>("mycart") ?? new List<Product>();
+
+
+    int row = 0;
+    int totalQuan = 0;
+    decimal totalBill = 0;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .btn-primary:hover {
+        background-color: #0056d2 !important;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .invalid-feedback {
+        display: none;
+        font-size: 0.9rem;
+        color: #dc3545;
+    }
+
+    .form-control.is-invalid + .invalid-feedback {
+        display: block;
+    }
+</style>
+<!-- Start All Title Box -->
+<div class="all-title-box">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Cart</h2>
+              @*   <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                    <li class="breadcrumb-item active">Cart</li>
+                </ul> *@
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End All Title Box -->
+<!-- Start Cart -->
+<div class="cart-box-main py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-bordered table-hover text-center bg-white">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Images</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (cart != null && cart.Any())
+                            {
+                                foreach (var item in cart)
+                                {
+                                    <tr class="cart-row" data-row="@row">
+                                        <td>
+                                            <img class="img-fluid rounded" src="@Url.Content(item.Product_Picture)" alt="Picture" style="width: 60px;" />
+                                        </td>
+                                        <td>
+                                            <div class="font-weight-bold">@item.Product_Name</div>
+                                            <small class="text-muted">@item.Product_Description</small>
+                                        </td>
+                                        <td><b>Rs. @item.Product_SalePrice</b></td>
+                                        <td>
+                                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                                <a href="@Url.Action("MinusFromCart", "Home", new { rowNo = row })" class="btn btn-outline-danger btn-sm"><i class="fa fa-minus"></i></a>
+                                                <span class="mx-2 font-weight-bold">@item.Prod_Quantity</span>
+                                                <a href="@Url.Action("PlusFromCart", "Home", new { rowNo = row })" class="btn btn-outline-danger btn-sm"><i class="fa fa-plus"></i></a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <b>Rs. @(item.Product_SalePrice * item.Prod_Quantity)</b>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("RemoveFromCart", "Home", new { rowNo = row })" class="text-danger"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+
+                                    row++;
+                                    totalQuan += item.Prod_Quantity;
+                                    totalBill += item.Product_SalePrice.GetValueOrDefault() * item.Prod_Quantity;
+
+                                }
+
+                                // Save totalAmount in session for PlayNow
+@*                                 HttpContextAccessor.HttpContext?.Session.SetString("totalAmount", totalBill.ToString());
+ *@                                HttpContextAccessor.HttpContext?.Session.SetDouble("totalAmount", (double)totalBill);
+
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-info" style="font-size:20px">
+                                        Your Shopping Cart is Empty.
+                                        <a href="@Url.Action("DisplayProduct", "Home")" style="font-size:20px" class="btn btn-link">Click Here To Buy!</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                        <tfoot class="font-weight-bold bg-light">
+                            <tr>
+                                <td colspan="3"></td>
+                                <td>Total Quantity: @totalQuan</td>
+                                <td>Total Bill : Rs. @totalBill</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("PlayNow", "Home", FormMethod.Post, new { id = "playNowForm" }))
+        {
+            <div class="row my-5">
+                <div class="col-lg-6 col-sm-12 mb-4">
+                    <div class="order-box p-3 shadow rounded bg-white">
+                        <h4 class="mb-3 text-primary">Customer Details</h4>
+                        <div class="form-group">
+                            <input type="text" name="Order_Name" placeholder="Customer Name" class="form-control" required />
+                            <div class="error-message text-danger" style="display:none;">Customer Name is required.</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="Order_Contact" placeholder="Phone Number" class="form-control" required />
+                            <div class="error-message text-danger" style="display:none;">Phone Number is required.</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="Order_Email" placeholder="Email" class="form-control" required />
+                            <div class="error-message text-danger" style="display:none;">Email is required.</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="Order_Address" placeholder="Address" class="form-control" required />
+                            <div class="error-message text-danger" style="display:none;">Address is required.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-sm-12 mb-4">
+                    <div class="order-box p-3 shadow rounded bg-white">
+                        <h4 class="mb-3 text-primary">Order Summary</h4>
+                        <div class="d-flex justify-content-between"><span>Sub Total</span><span>Rs. @totalBill</span></div>
+                        <div class="d-flex justify-content-between"><span>Discount</span><span>Rs. 0.00</span></div>
+                        <div class="d-flex justify-content-between"><span>Tax</span><span>Rs. 0.00</span></div>
+                        <div class="d-flex justify-content-between"><span>Shipping</span><span>Free</span></div>
+                        <hr>
+                        <div class="d-flex justify-content-between font-weight-bold text-dark">
+                            <span>Grand Total</span><span>Rs. @totalBill</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 text-right">
+                    <input type="submit" value="Play Now" class="btn btn-primary btn-lg" id="playNowBtn" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- JS Validation (same as before) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        $('#playNowBtn').click(function (e) {
+            var isValid = true;
+
+            $('#playNowForm .form-control').each(function () {
+                var input = $(this);
+                if ($.trim(input.val()) === "") {
+                    input.next('.error-message').show();
+                    input.css('border', '2px solid red');
+                    isValid = false;
+                } else {
+                    input.next('.error-message').hide();
+                    input.css('border', '');
+                }
+            });
+
+            if (!isValid) e.preventDefault();
+        });
+
+        $('#playNowForm .form-control').on('focus', function () {
+            $(this).next('.error-message').hide();
+            $(this).css('border', '');
+        });
+    });
+
+    window.onload = function () {
+        window.scrollBy(0, 180);
+    };
+</script>
+
+<script src="~/Scripts/Jquery.js"></script>
+
+

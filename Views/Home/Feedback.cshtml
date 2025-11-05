@@ -1,0 +1,199 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/lib/bootstrap/dist/css/bootstrap-reboot.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    .btn-primary:hover {
+        background-color: #0056d2 !important;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .contact-box-main .container {
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .invalid-feedback {
+        display: none; 
+        font-size: 0.9rem;
+        color: #dc3545;
+    }
+
+    .form-control.is-invalid + .invalid-feedback {
+        display: block;
+    }
+
+    .star-rating i {
+        font-size: 1.5rem;
+        color: #ccc;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+        .star-rating i.active {
+            color: #f4c150; /* gold color */
+        }
+
+    @@keyframes popScale {
+        0% {
+            transform: translateX(-50%) scale(0.3);
+            opacity: 0;
+        }
+
+        50% {
+            transform: translateX(-50%) scale(1.1);
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateX(-50%) scale(1);
+        }
+    }
+</style>
+
+<!-- Start All Title Box -->
+<div class="all-title-box">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Feedback</h2>
+               @*  <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active"> Feedback </li>
+                </ul> *@
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End All Title Box -->
+<!-- Start Feedback Form -->
+<div class="contact-box-main">
+    <div class="container">
+        <div class="row">
+           <div class="col-12 mx-auto" style="max-width: 550px; box-shadow: 0 12px 28px rgba(0, 123, 255, 0.25); ">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                    <h3 class="text-center text-primary mb-4">We'd Love Your Feedback!</h3>
+                    <form id="feedbackForm" novalidate>
+                        <div class="form-group mb-4">
+                            <label for="name" class="form-label fw-semibold">Your Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required placeholder="Enter your name">
+                            <div class="invalid-feedback">Name is required.</div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="email" class="form-label fw-semibold">Your Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email">
+                            <div class="invalid-feedback">Valid email is required.</div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            You must need to fill the stars for successfull feed back<br />
+                            <label class="form-label fw-semibold" style="font-size:20px">Rating</label>
+
+                            <div class="star-rating d-flex gap-2">
+                                <label>
+                                    <input type="radio" name="rating" value="1" hidden />
+                                    <i class="fa-regular fa-star" data-value="1"></i> 1
+                                </label>
+                                <label>
+                                    <input type="radio" name="rating" value="2" hidden />
+                                    <i class="fa-regular fa-star" data-value="2"></i> 2
+                                </label>
+                                <label>
+                                    <input type="radio" name="rating" value="3" hidden />
+                                    <i class="fa-regular fa-star" data-value="3"></i> 3
+                                </label>
+                                <label>
+                                    <input type="radio" name="rating" value="4" hidden />
+                                    <i class="fa-regular fa-star" data-value="4"></i> 4
+                                </label>
+                                <label>
+                                    <input type="radio" name="rating" value="5" hidden />
+                                    <i class="fa-regular fa-star" data-value="5"></i> 5
+                                </label>
+                            </div>
+                            <div class="invalid-feedback">Rating is required.</div>
+                        </div>
+
+
+                        <div class="form-group mb-4">
+                            <label for="message" class="form-label fw-semibold">Your Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="4" required placeholder="Write your message"></textarea>
+                            <div class="invalid-feedback">Message is required.</div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">Submit Feedback</button>
+                        </div>
+                    </form>
+                    <div id="successMessage" class="alert alert-success fw-semibold text-center shadow-lg" style="display:none; position: fixed; top: 20%; left: 50%; transform: translateX(-50%); z-index: 9999; padding: 20px 30px; font-size: 1.2rem; border-radius: 15px; animation: popScale 0.6s ease-out;">
+                        🎉 Thank you! Your feedback was submitted successfully!
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+<!-- End Feedback Form -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+ <script>
+    $('#feedbackForm').on('submit', function (e) {
+        e.preventDefault();
+        let isValid = true;
+
+        // Validate inputs and textarea
+        $('#feedbackForm input, #feedbackForm textarea').each(function () {
+            const $field = $(this);
+            if (!$field.val().trim()) {
+                $field.addClass('is-invalid');
+                isValid = false;
+            } else {
+                $field.removeClass('is-invalid');
+            }
+        });
+
+        // Validate rating
+        if (!$('input[name="rating"]:checked').val()) {
+            $('.star-rating').addClass('is-invalid');
+            isValid = false;
+        } else {
+            $('.star-rating').removeClass('is-invalid');
+        }
+
+        if (isValid) {
+            // Show success message with boom effect
+            $('#successMessage')
+                .fadeIn(300)
+                .delay(2500)
+                .fadeOut(600);
+
+            // Reset form and stars
+            $('#feedbackForm')[0].reset();
+            $('.star-rating i').removeClass('active');
+        }
+    });
+
+    $('.star-rating i').on('click', function () {
+        const value = $(this).data('value');
+
+        // Highlight stars
+        $('.star-rating i').each(function () {
+            if ($(this).data('value') <= value) {
+                $(this).addClass('active');
+            } else {
+                $(this).removeClass('active');
+            }
+        });
+
+        // Check corresponding radio button
+        $('.star-rating input').prop('checked', false);
+        $('.star-rating input[value="' + value + '"]').prop('checked', true);
+    });
+</script> 

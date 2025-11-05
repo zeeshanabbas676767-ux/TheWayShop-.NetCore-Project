@@ -1,0 +1,72 @@
+﻿@model List<NewCoreProject.Models.Product>
+
+@{
+    // Calculate the total number of items in the cart
+    int totalCartItems = Model.Sum(p => p.Prod_Quantity);
+    decimal totalCartBill = Model.Sum(p => p.Product_SalePrice.GetValueOrDefault() * p.Prod_Quantity);
+}
+
+<li class="nav-item dropdown me-5" style="width: 40px; position: relative;">
+    <a id="bagDropdownToggle"
+       class="nav-link Custom-btn dropdown-toggle"
+       href="#"
+       data-bs-toggle="dropdown"
+       aria-haspopup="true"
+       data-bs-auto-close="outside"
+       aria-expanded="false"
+       style="padding-right: 1.5rem;">
+        <i class="fa fa-shopping-bag" style="margin: auto;"></i>
+
+        @if (totalCartItems > 0)
+        {
+            <span class="badge rounded-pill bg-danger"
+                  style="position: absolute; top: 0; right: -5px; font-size: 0.7em;">
+                @totalCartItems
+            </span>
+        }
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="bagDropdownToggle" style="min-width: 500px;">
+        @if (Model.Any())
+        {
+            <h6 class="dropdown-header text-center border-bottom pb-2 mb-2"><strong style="font-size:17px">🛒 Shopping Cart</strong> (@Model.Count items)</h6>
+
+            <ul class="list-unstyled" style="max-height: 200px; overflow-y: auto;">
+                @foreach (var item in Model.Take(3)) // Show a few items, limit as needed
+                {
+                    <li class="d-flex align-items-center mb-2 pb-2 border-bottom">
+                        <img src="@Url.Content(item.Product_Picture)" alt="Product" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;" class="rounded">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1"style="font-weight:800">@item.Product_Name</h6>
+                            <small class="text-muted"><b>Qty:</b> @item.Prod_Quantity</small><br />
+                            <small class="text-muted"><b>Rs.</b> @item.Product_SalePrice</small><br />
+                            <small class="text-muted"><b>Description:</b> @item.Product_Description</small>
+
+                        </div>
+                        <span class="fw-bold">Rs. @(item.Product_SalePrice.GetValueOrDefault() * item.Prod_Quantity)</span>
+                    </li>
+                }
+                @if (Model.Count > 3)
+                {
+                    <li class="text-center text-muted small">...and @(Model.Count - 3) more items.</li>
+                }
+            </ul>
+
+            <div class="d-flex justify-content-between fw-bold pt-2 border-top mt-2">
+                <span>Total:</span>
+                <span>Rs. @totalCartBill</span>
+            </div>
+
+            <a href="@Url.Action("Cart", "Home")" class="btn btn-primary btn-sm d-block mt-3">View Cart & Checkout</a>
+        }
+        else
+        {
+            <div class="text-center p-2">
+                Your cart is empty.
+            </div>
+            <a href="@Url.Action("DisplayProduct", "Home")" class="btn btn-primary col-md-5 btn-sm d-block mt-2"style="margin:auto">Go Shopping</a>
+        }
+    </div>
+</li>
+
+@* You might need to adjust 'data-toggle' to 'data-bs-toggle' and potentially include Popper.js and Bootstrap JS in your layout for the dropdown to work correctly if you are using Bootstrap 5. *@
