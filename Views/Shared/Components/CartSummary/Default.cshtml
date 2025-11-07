@@ -32,13 +32,13 @@
             <h6 class="dropdown-header text-center border-bottom pb-2 mb-2"><strong style="font-size:17px">🛒 Shopping Cart</strong> (@Model.Count items)</h6>
 
             <ul class="list-unstyled" style="max-height: 200px; overflow-y: auto;">
-                @foreach (var item in Model.Take(3)) // Show a few items, limit as needed
+                @foreach (var item in Model) // Add this Model.Take(3) if you want to show a few items, limit as needed, 
                 {
                     <li class="d-flex align-items-center mb-2 pb-2 border-bottom">
                         <img src="@Url.Content(item.Product_Picture)" alt="Product" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;" class="rounded">
                         <div class="flex-grow-1">
                             <h6 class="mb-1"style="font-weight:800">@item.Product_Name</h6>
-                            <small class="text-muted"><b>Qty:</b> @item.Prod_Quantity</small><br />
+                            <small class="text-muted"><b>Quantity:</b> @item.Prod_Quantity</small><br />
                             <small class="text-muted"><b>Rs.</b> @item.Product_SalePrice</small><br />
                             <small class="text-muted"><b>Description:</b> @item.Product_Description</small>
 
@@ -46,10 +46,10 @@
                         <span class="fw-bold">Rs. @(item.Product_SalePrice.GetValueOrDefault() * item.Prod_Quantity)</span>
                     </li>
                 }
-                @if (Model.Count > 3)
+               @*  @if (Model.Count > 3)
                 {
                     <li class="text-center text-muted small">...and @(Model.Count - 3) more items.</li>
-                }
+                } *@
             </ul>
 
             <div class="d-flex justify-content-between fw-bold pt-2 border-top mt-2">

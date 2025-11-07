@@ -180,7 +180,7 @@ namespace NewCoreProject.Controllers
         // ✅ Add To Cart
         public IActionResult AddToCart(int id)
         {
-            var list = HttpContext.Session.GetObjectFromJson<List<Product>>("mycart") ?? new List<Product>();
+            var list = HttpContext.Session.GetObject<List<Product>>("mycart") ?? new List<Product>();
 
             var product = _context.Products.FirstOrDefault(p => p.Product_Id == id);
             if (product != null)
@@ -189,14 +189,14 @@ namespace NewCoreProject.Controllers
                 list.Add(product);
             }
 
-            HttpContext.Session.SetObjectAsJson("mycart", list);
+            HttpContext.Session.SetObject("mycart", list);
             return RedirectToAction("Cart", "Home");
         }
 
         // ✅ Decrease Quantity
         public IActionResult MinusFromCart(int rowNo)
         {
-            var list = HttpContext.Session.GetObjectFromJson<List<Product>>("mycart") ?? new List<Product>();
+            var list = HttpContext.Session.GetObject<List<Product>>("mycart") ?? new List<Product>();
 
             if (rowNo >= 0 && rowNo < list.Count)
             {
@@ -204,35 +204,35 @@ namespace NewCoreProject.Controllers
                     list[rowNo].Prod_Quantity--;
             }
 
-            HttpContext.Session.SetObjectAsJson("mycart", list);
+            HttpContext.Session.SetObject("mycart", list);
             return RedirectToAction("Cart", "Home");
         }
 
         // ✅ Increase Quantity
         public IActionResult PlusFromCart(int rowNo)
         {
-            var list = HttpContext.Session.GetObjectFromJson<List<Product>>("mycart") ?? new List<Product>();
+            var list = HttpContext.Session.GetObject<List<Product>>("mycart") ?? new List<Product>();
 
             if (rowNo >= 0 && rowNo < list.Count)
             {
                 list[rowNo].Prod_Quantity++;
             }
 
-            HttpContext.Session.SetObjectAsJson("mycart", list);
+            HttpContext.Session.SetObject("mycart", list);
             return RedirectToAction("Cart", "Home");
         }
 
         // ✅ Remove From Cart
         public IActionResult RemoveFromCart(int rowNo)
         {
-            var list = HttpContext.Session.GetObjectFromJson<List<Product>>("mycart") ?? new List<Product>();
+            var list = HttpContext.Session.GetObject<List<Product>>("mycart") ?? new List<Product>();
 
             if (rowNo >= 0 && rowNo < list.Count)
             {
                 list.RemoveAt(rowNo);
             }
 
-            HttpContext.Session.SetObjectAsJson("mycart", list);
+            HttpContext.Session.SetObject("mycart", list);
             return RedirectToAction("Cart", "Home");
         }
 
@@ -243,9 +243,9 @@ namespace NewCoreProject.Controllers
             o.Order_Status = "Paid";
             o.Order_Type = "Sale";
 
-            HttpContext.Session.SetObjectAsJson("Order", o);
+            HttpContext.Session.SetObject("Order", o);
 
-            double totalAmount = HttpContext.Session.GetDouble("totalAmount");
+            double totalAmount = HttpContext.Session.GetObject<double>("totalAmount");
             double convertedAmount = totalAmount / 282; // Example conversion rate
 
             return Redirect($"https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-343yy341072387@personal.example.com&item_name=TheWayShopProducts&return=https://localhost:44369/Home/OrderBooked&amount={convertedAmount}");
@@ -254,7 +254,7 @@ namespace NewCoreProject.Controllers
         // ✅ Order Confirmation
         public IActionResult OrderBooked()
         {
-            var order = HttpContext.Session.GetObjectFromJson<Order>("Order");
+            var order = HttpContext.Session.GetObject<Order>("Order");
             return View(order);
         }
 

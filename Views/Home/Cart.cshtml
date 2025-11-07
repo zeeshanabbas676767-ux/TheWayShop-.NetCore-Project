@@ -5,7 +5,7 @@
 
 
 @{
-    var cart = HttpContextAccessor.HttpContext?.Session.GetObjectFromJson<List<Product>>("mycart") ?? new List<Product>();
+    var cart = HttpContextAccessor.HttpContext?.Session.GetObject<List<Product>>("mycart") ?? new List<Product>();
 
 
     int row = 0;
@@ -100,7 +100,7 @@
 
                                 // Save totalAmount in session for PlayNow
 @*                                 HttpContextAccessor.HttpContext?.Session.SetString("totalAmount", totalBill.ToString());
- *@                                HttpContextAccessor.HttpContext?.Session.SetDouble("totalAmount", (double)totalBill);
+ *@                                HttpContextAccessor.HttpContext?.Session.SetObject("totalAmount", (double)totalBill);
 
                             }
                             else

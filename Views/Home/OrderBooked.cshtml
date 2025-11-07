@@ -10,7 +10,7 @@
     decimal totalBill = 0;
 
     // Get cart from session using Core extension method
-    var cart = HttpContextAccessor.HttpContext?.Session.GetObjectFromJson<List<Product>>("mycart") ?? new List<Product>();
+    var cart = HttpContextAccessor.HttpContext?.Session.GetObject<List<Product>>("mycart") ?? new List<Product>();
 }
 
 <!-- Start All Title Box -->
@@ -72,7 +72,7 @@
                                     totalBill += (decimal)item.Product_SalePrice.GetValueOrDefault() * item.Prod_Quantity;
                                 }
 
-                                HttpContextAccessor.HttpContext?.Session.SetDouble("totalAmount", (double)totalBill);
+                                HttpContextAccessor.HttpContext?.Session.SetObject("totalAmount", (double)totalBill);
                             }
                             else
                             {

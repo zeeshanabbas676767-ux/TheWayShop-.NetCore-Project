@@ -10,7 +10,7 @@ namespace NewCoreProject.ViewComponents
         public IViewComponentResult Invoke()
         {
             // Get the cart from session, similar to what you do in the Cart view
-            var cart = HttpContext.Session.GetObjectFromJson<List<Product>>("mycart") ?? new List<Product>();
+            var cart = HttpContext.Session.GetObject<List<Product>>("mycart") ?? new List<Product>();
 
             // You can pass the cart list directly, or a summary object
             return View(cart);
