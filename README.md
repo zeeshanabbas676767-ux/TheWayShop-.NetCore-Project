@@ -63,20 +63,20 @@ Payment Gateway: PayPal Sandbox
 ## 🗂️ Project Structure  
 
 ### 🔹 User Admin
-![User Admin](Screenshot/UserAdmin.png)
+![User Admin](Screenshots/UserAdmin.png)
 
 ### 🔹 Dashboard
-![Dashboard](Screenshot/Dashboard.png)
+![Dashboard](Screenshots/Dashboard.png)
 
 ### 🔹 Carts
-![Carts](Screenshot/Carts.png)
+![Carts](Screenshots/Carts.png)
 
 ### 🔹 Products-Bag
-![Products-Bag](Screenshot/Products-Bag.png)
+![Products-Bag](Screenshots/Products-Bag.png)
 
 ### 🔹 Products
-![Products](Screenshot/Products.png)
+![Products](Screenshots/Products.png)
 
 ### 🔹 All-Products
-![All-Products](Screenshot/All-Products.png)
+![All-Products](Screenshots/All-Products.png)
 
